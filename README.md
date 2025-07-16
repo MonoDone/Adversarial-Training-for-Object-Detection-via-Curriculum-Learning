@@ -10,6 +10,9 @@
 
 This is the official implementation for [On the Importance of Backbone to the Adversarial Robustness of Object Detectors](https://ieeexplore.ieee.org/abstract/document/10891598/), IEEE TIFS 2025.
 
+We further extend this line of research to defend against **physically realizable attacks** in our new paper  
+**"PBCAT: Patch-Based Composite Adversarial Training against Physically Realizable Attacks on Object Detection"**, accepted to *ICCV 2025*.  
+🔗 Project page: [https://github.com/LixiaoTHU/oddefense-PatchAT](https://github.com/LixiaoTHU/oddefense-PatchAT)
 
 <h3>Preparation</h3>
 
@@ -27,6 +30,7 @@ This is the official implementation for [On the Importance of Backbone to the Ad
 
   Download pretrained ResNet-50 backbone: <a href='https://huggingface.co/suixin1424/oddefense/blob/main/resnet50_linf_eps4_pure.pth'>resnet-50 pretrained </a>
   Download pretrained ConvNeXt-T backbone: <a href='https://huggingface.co/suixin1424/oddefense/blob/main/convnext_tiny_mmcls-linf-eps-4-advan.pth'>convnext-t pretrained </a>
+
   
 
 <h3>Train and Evaluate</h3>
@@ -68,9 +72,16 @@ If you find that our work is helpful to you, please star this project and consid
 
 ```
 @article{li2025importance,
-  title={On the Privacy Effect of Data Enhancement via the Lens of Memorization},
+  title={On the importance of backbone to the adversarial robustness of object detectors},
   author={Li, Xiao and Chen, Hang and Hu, Xiaolin},
-  journal={IEEE Transactions on Information Forensics and Security}, 
+  journal={IEEE Transactions on Information Forensics and Security},
+  year={2025},
+  publisher={IEEE}
+}
+@inproceedings{li2025pbcat,
+  title={PBCAT: Patch-based composite adversarial training against physically realizable attacks on object detection},
+  author={Li, Xiao and Zhu, Yiming and Huang, Yifan and Zhang, Wei and He, Yingzhe and Shi, Jie and Hu, Xiaolin},
+  booktitle={{IEEE InternationalConference on Computer Vision},
   year={2025}
-  }
+}
 ```
