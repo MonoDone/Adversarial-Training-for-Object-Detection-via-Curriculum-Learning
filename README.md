@@ -8,7 +8,8 @@
 
 <h2 id="quick-start">Quick Start</h2>
 
-This is the official implementation for ''On the Importance of Backbone to the Adversarial Robustness of Object Detectors'', IEEE TIFS 2025.
+This is the official implementation for [On the Importance of Backbone to the Adversarial Robustness of Object Detectors](https://ieeexplore.ieee.org/abstract/document/10891598/), IEEE TIFS 2025.
+
 
 <h3>Preparation</h3>
 
