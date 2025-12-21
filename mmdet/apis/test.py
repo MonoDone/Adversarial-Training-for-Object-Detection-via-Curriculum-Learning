@@ -14,6 +14,7 @@ from mmcv.runner import get_dist_info
 from mmdet.core import encode_mask_results
 from mmcv.parallel import scatter
 import cv2, os
+# torch.autograd.set_detect_anomaly(True)
 
 
 def cal_adv(model, img, adv_sample, img_transform, test_adv_cfg):
