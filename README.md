@@ -1,3 +1,4 @@
+````markdown
 <div align="center">
   <h3></h3>
 </div>
@@ -18,29 +19,29 @@ pip install mmdet==2.28.0
 pip install -r requirements.txt
 ````
 
-> 说明：请按需准备对应 backbone / detector 的预训练权重与数据集路径，并在配置或脚本中正确指向。
+> Note: Please prepare the required pretrained backbone / detector weights and dataset paths as needed, and make sure the configs or scripts point to the correct locations.
 
 <h3>Train and Evaluate</h3>
 
 #### 1) Training
 
 ```bash
-bash run_baseline.sh # 训练baseline
-bash run_processing.sh # 训练ours
+bash run_baseline.sh # train baseline
+bash run_processing.sh # train ours
 ```
 
 #### 2) Evaluation
 
 ```bash
-bash test_baseline.sh # 测试baseline干净样本性能
-bash test_processing.sh # 测试ours干净样本性能
-bash test_pure_baseline.sh # 测试baseline白盒性能 
-bash test_pure_processing.sh # 测试ours白盒性能
+bash test_baseline.sh # evaluate baseline on clean samples
+bash test_processing.sh # evaluate ours on clean samples
+bash test_pure_baseline.sh # evaluate baseline under white-box setting
+bash test_pure_processing.sh # evaluate ours under white-box setting
 ```
 
 <h2 id="weights">Weights</h2>
 
-下表提供不同架构对应的权重文件（Processing/Ours）：
+The following table provides weights for different architectures (Processing/Ours):
 
 | **File**                  | **Link**                                                                                                             |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -53,6 +54,7 @@ bash test_pure_processing.sh # 测试ours白盒性能
 
 <h3>Acknowledgement</h3>
 
-致谢：本项目参考并改造自开源仓库 [https://github.com/thu-ml/oddefense](https://github.com/thu-ml/oddefense) 。
+Acknowledgement: This project is adapted from the open-source repository [https://github.com/thu-ml/oddefense](https://github.com/thu-ml/oddefense) .
 
-
+```
+```
