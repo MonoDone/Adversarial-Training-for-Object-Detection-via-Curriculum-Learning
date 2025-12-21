@@ -60,7 +60,9 @@ class AdvOptimizerHook(OptimizerHook):
             self.detect_anomalous_parameters(runner.outputs['loss'], runner)
         
         model = runner.model.module
-        epsilon = model.epsilon
+        epsilon = model.epsilon if runner.normal_flag else runner._epsilon[runner._epoch] # new
+        # alpha = epsilon if runner.normal_flag else 2 * epsilon / max(runner.free_m, 1) # new
+        alpha = epsilon
         noise_transform = (lambda x: x / model.img_std, lambda x: x * model.img_std)
 
 
@@ -74,7 +76,7 @@ class AdvOptimizerHook(OptimizerHook):
             grad_mtd = torch.autograd.grad(losses_generate, [model.aux_img])[0].detach()
 
             adv_noise = noise_transform[1](model.adv_noise)
-            adv_noise = torch.clamp(adv_noise + epsilon * torch.sign(grad_mtd), -epsilon, epsilon).detach_()
+            adv_noise = torch.clamp(adv_noise + alpha * torch.sign(grad_mtd), -epsilon, epsilon).detach_()
             adv_noise = noise_transform[0](adv_noise)
         elif model.adv_type == "all":
             runner.outputs['loss'].backward(retain_graph=True)
@@ -82,7 +84,7 @@ class AdvOptimizerHook(OptimizerHook):
             grad_mtd = torch.autograd.grad(losses_generate, [model.aux_img])[0].detach()
 
             adv_noise = noise_transform[1](model.adv_noise)
-            adv_noise = torch.clamp(adv_noise + epsilon * torch.sign(grad_mtd), -epsilon, epsilon).detach_()
+            adv_noise = torch.clamp(adv_noise + alpha * torch.sign(grad_mtd), -epsilon, epsilon).detach_()
             adv_noise = noise_transform[0](adv_noise)
         elif model.adv_type == "com":
             runner.outputs['loss'].backward()
@@ -91,7 +93,7 @@ class AdvOptimizerHook(OptimizerHook):
             grad_adv = model.aux_img.grad.detach()
 
             adv_noise = noise_transform[1](model.adv_noise)
-            adv_noise = torch.clamp(adv_noise + epsilon * torch.sign(grad_adv), -epsilon, epsilon).detach_()
+            adv_noise = torch.clamp(adv_noise + alpha * torch.sign(grad_adv), -epsilon, epsilon).detach_()
             adv_noise = noise_transform[0](adv_noise)
             model.aux_img.grad.data.zero_()
         else:
@@ -101,7 +103,7 @@ class AdvOptimizerHook(OptimizerHook):
             grad_adv = model.aux_img.grad.detach()
 
             adv_noise = noise_transform[1](model.adv_noise)
-            adv_noise = torch.clamp(adv_noise + epsilon * torch.sign(grad_adv), -epsilon, epsilon).detach_()
+            adv_noise = torch.clamp(adv_noise + alpha * torch.sign(grad_adv), -epsilon, epsilon).detach_()
             adv_noise = noise_transform[0](adv_noise)
             model.aux_img.grad.data.zero_()
 
