@@ -54,9 +54,10 @@ class AdvEpochBasedRunner(EpochBasedRunner):
         self._max_iters = self._max_epochs * len(self.data_loader)
         self.call_hook('before_train_epoch')
         time.sleep(2)  # Prevent possible deadlock during epoch transition
+        self.normal_flag = False # new
 
 
-        self.free_m = self.model.module.free_m
+        self.free_m = self.model.module.free_m if self.normal_flag else self._free_m[self._epoch] # new
         for i, data_batch in enumerate(self.data_loader):
             # self._inner_iter = i
             self.data_batch = data_batch # Not changed by the model
@@ -138,6 +139,11 @@ class AdvEpochBasedRunner(EpochBasedRunner):
         self.logger.info('workflow: %s, max: %d epochs', workflow,
                          self._max_epochs)
         self.call_hook('before_run')
+        _free_m = self.model.module.free_m # new
+        _epsilon = self.model.module.epsilon # new
+        self._free_m, self._epsilon = generate_fat_multipliers_from_initial(_free_m, _epsilon, self._max_epochs)
+        self._free_m = [4, 4, 6, 6, 8, 8] # longsheng
+        self._epsilon = [0, 1, 2, 4, 8, 8] # longsheng
 
         while self.epoch < self._max_epochs:
             for i, flow in enumerate(workflow):
@@ -161,3 +167,40 @@ class AdvEpochBasedRunner(EpochBasedRunner):
         time.sleep(1)  # wait for some hooks like loggers to finish
         self.call_hook('after_run')
 
+
+## new ##
+def generate_fat_multipliers_from_initial(initial_free_m, initial_epsilon, max_epochs):
+    """
+    Generate dynamic multipliers for `free_m` and `epsilon` based on given initial values.
+    This function splits the epochs into 4 stages and computes the multipliers accordingly.
+
+    Args:
+    - initial_free_m (int): The initial multiplier for `free_m` at the first stage.
+    - initial_epsilon (float): The initial epsilon value for the first stage.
+    - max_epochs (int): The total number of epochs for training.
+
+    Returns:
+    - free_m_multipliers (list): List of multipliers for `free_m` over `max_epochs`.
+    - epsilon_multipliers (list): List of multipliers for `epsilon` over `max_epochs`.
+    """
+    # Ensure max_epochs is at least 4 for meaningful stage division
+    if max_epochs < 4:
+        raise ValueError("max_epochs must be at least 4 to split into four stages.")
+    
+    # Calculate the length of each stage
+    stage_length = max_epochs // 4
+    remaining_epochs = max_epochs % 4
+    
+    # Adjust stage lengths based on remaining epochs
+    stage_lengths = [stage_length] * 4
+    for i in range(remaining_epochs):
+        stage_lengths[i] += 1
+    
+    # Generate multipliers for `free_m` and `epsilon`
+    free_m_multipliers = [initial_free_m] * stage_lengths[0] + [int(initial_free_m * 1.5)] * stage_lengths[1] + \
+                          [int(initial_free_m * 1.5)] * stage_lengths[2] + [initial_free_m * 2] * stage_lengths[3]
+    
+    epsilon_multipliers = [initial_epsilon] * stage_lengths[0] + [initial_epsilon * 1.125] * stage_lengths[1] + \
+                           [initial_epsilon * 1.125] * stage_lengths[2] + [initial_epsilon * 1.25] * stage_lengths[3]
+    
+    return free_m_multipliers, epsilon_multipliers
