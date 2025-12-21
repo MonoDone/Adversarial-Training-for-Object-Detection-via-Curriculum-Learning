@@ -142,8 +142,8 @@ class AdvEpochBasedRunner(EpochBasedRunner):
         _free_m = self.model.module.free_m # new
         _epsilon = self.model.module.epsilon # new
         self._free_m, self._epsilon = generate_fat_multipliers_from_initial(_free_m, _epsilon, self._max_epochs)
-        self._free_m = [4, 4, 6, 6, 8, 8] # longsheng
-        self._epsilon = [0, 1, 2, 4, 8, 8] # longsheng
+        self._free_m = [4, 4, 6, 6, 8, 8] # new
+        self._epsilon = [0, 1, 2, 4, 8, 8] # new
 
         while self.epoch < self._max_epochs:
             for i, flow in enumerate(workflow):
