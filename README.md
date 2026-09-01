@@ -4,6 +4,8 @@
 
 <h2 id="quick-start">Quick Start</h2>
 
+This is the official implementation for [Adversarial training for object detection via curriculum learning]().
+
 <h3>Preparation</h3>
 
 ```sh
